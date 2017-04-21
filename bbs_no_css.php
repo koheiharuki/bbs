@@ -1,6 +1,4 @@
 <?php
-  // ここにDBに登録する処理を記述する
-//テスト
 //テスト後で消す
   if  (!empty($_POST)) {
 
@@ -23,6 +21,27 @@
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
 
+      //SELECT文の実行
+      //SQL文作成（SELECT分）
+      $sql = 'SELECT * FROM `posts`;';
+
+      //実行
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+
+      //配列で取得したデータを格納
+      //配列を初期化（準備）
+      $posts_datas = array();
+
+      //繰り返し文でデータの取得（フェッチ）
+      while(1) {
+        $rec = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($rec == false){
+          break;
+        }
+        //echo $rec['nickname'];
+        $post_datas[] = $rec;
+      }
   }
 
   // ３．データベースを切断する
@@ -41,7 +60,17 @@
       <p><textarea type="text" name="comment" placeholder="comment"></textarea></p>
       <p><button type="submit" >つぶやく</button></p>
     </form>
+
     <!-- ここにニックネーム、つぶやいた内容、日付を表示する -->
+    <?php
+    foreach ($post_datas as $post_each){
+      echo $post_each['nickname'].'<br>';
+      echo $post_each['comment']'<br>';
+      echo $post_each['created'].'<br>';
+      echo '<hr>';
+    }
+    ?>
+
 
 </body>
 </html>
